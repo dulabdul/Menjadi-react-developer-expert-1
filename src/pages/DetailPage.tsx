@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaThumbsUp, FaThumbsDown, FaRegComment } from 'react-icons/fa';
 import type { RootState, AppDispatch } from '../states';
 import {
   asyncReceiveThreadDetail,
   asyncAddComment,
+  asyncToggleVoteComment,
 } from '../states/threadDetail/action';
 import { asyncToggleVoteThread } from '../states/threads/action';
 import CommentItem from '../components/CommentItem';
 import CommentInput from '../components/CommentInput';
 import DetailSkeleton from '../components/DetailSkeleton';
+import LoginModal from '../components/LoginModal';
 import { postedAt } from '../utils';
 
 export default function DetailPage() {
@@ -19,7 +21,10 @@ export default function DetailPage() {
     (state: RootState) => state as any,
   );
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     const fetchDetail = () => {
@@ -35,7 +40,10 @@ export default function DetailPage() {
 
   const onUpVote = () => {
     if (!id) return;
-    if (!authUser) return alert('Please login first');
+    if (!authUser) {
+      setShowLoginModal(true);
+      return;
+    }
 
     const isUpVoted = threadDetail.upVotesBy.includes(authUser.id);
 
@@ -50,7 +58,10 @@ export default function DetailPage() {
 
   const onDownVote = () => {
     if (!id) return;
-    if (!authUser) return alert('Please login first');
+    if (!authUser) {
+      setShowLoginModal(true);
+      return;
+    }
 
     const isDownVoted = threadDetail.downVotesBy.includes(authUser.id);
 
@@ -63,8 +74,52 @@ export default function DetailPage() {
     );
   };
 
+  const onCommentUpVote = (commentId: string) => {
+    if (!id) return;
+    if (!authUser) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    const comment = threadDetail.comments.find((c: any) => c.id === commentId);
+    const isUpVoted = comment.upVotesBy.includes(authUser.id);
+
+    dispatch(
+      asyncToggleVoteComment({
+        threadId: id,
+        commentId,
+        voteType: isUpVoted ? 0 : 1,
+        userId: authUser.id,
+      }),
+    );
+  };
+
+  const onCommentDownVote = (commentId: string) => {
+    if (!id) return;
+    if (!authUser) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    const comment = threadDetail.comments.find((c: any) => c.id === commentId);
+    const isDownVoted = comment.downVotesBy.includes(authUser.id);
+
+    dispatch(
+      asyncToggleVoteComment({
+        threadId: id,
+        commentId,
+        voteType: isDownVoted ? 0 : -1,
+        userId: authUser.id,
+      }),
+    );
+  };
+
   const onCommentSubmit = (content: string) => {
     if (!id) return;
+    if (!authUser) {
+      setShowLoginModal(true);
+      return;
+    }
     dispatch(asyncAddComment({ content, threadId: id }));
   };
 
@@ -80,6 +135,12 @@ export default function DetailPage() {
 
   return (
     <div className='container mx-auto px-4 max-w-4xl pb-10'>
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onLogin={() => navigate('/login')}
+      />
+
       <div className='bg-white dark:bg-gray-800 p-8 rounded-lg shadow mb-6 transition-colors duration-300'>
         <span className='bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-xs text-gray-600 dark:text-gray-300 font-medium transition-colors'>
           #{threadDetail.category}
@@ -110,12 +171,16 @@ export default function DetailPage() {
         <div className='flex items-center gap-4 text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-4 transition-colors'>
           <button
             onClick={onUpVote}
-            className={`flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${isUpVoted ? 'text-blue-600 dark:text-blue-400 font-bold' : ''}`}>
+            className={`flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${
+              isUpVoted ? 'text-blue-600 dark:text-blue-400 font-bold' : ''
+            }`}>
             <FaThumbsUp /> {threadDetail.upVotesBy.length}
           </button>
           <button
             onClick={onDownVote}
-            className={`flex items-center gap-2 hover:text-red-600 dark:hover:text-red-400 transition-colors ${isDownVoted ? 'text-red-600 dark:text-red-400 font-bold' : ''}`}>
+            className={`flex items-center gap-2 hover:text-red-600 dark:hover:text-red-400 transition-colors ${
+              isDownVoted ? 'text-red-600 dark:text-red-400 font-bold' : ''
+            }`}>
             <FaThumbsDown /> {threadDetail.downVotesBy.length}
           </button>
           <div className='flex items-center gap-2'>
@@ -132,7 +197,12 @@ export default function DetailPage() {
           <CommentInput submitComment={onCommentSubmit} />
         ) : (
           <p className='text-center mb-6 text-gray-500 dark:text-gray-400 italic transition-colors'>
-            Log in to comment
+            <button
+              onClick={() => setShowLoginModal(true)}
+              className='text-blue-500 hover:underline'>
+              Log in
+            </button>{' '}
+            to comment
           </p>
         )}
 
@@ -141,6 +211,9 @@ export default function DetailPage() {
             <CommentItem
               key={comment.id}
               comment={comment}
+              authUser={authUser}
+              onUpVote={onCommentUpVote}
+              onDownVote={onCommentDownVote}
             />
           ))}
         </div>

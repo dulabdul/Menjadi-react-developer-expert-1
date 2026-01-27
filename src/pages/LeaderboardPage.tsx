@@ -30,15 +30,15 @@ export default function LeaderboardPage() {
 
         {isLoading
           ? Array.from({ length: 5 }).map((_, index) => (
-              <LeaderboardSkeleton key={index} />
-            ))
+            <LeaderboardSkeleton key={index} />
+          ))
           : leaderboards.map(({ user, score }: any) => (
-              <LeaderboardItem
-                key={user.id}
-                user={user}
-                score={score}
-              />
-            ))}
+            <LeaderboardItem
+              key={user.id}
+              user={user}
+              score={score}
+            />
+          ))}
       </div>
     </div>
   );

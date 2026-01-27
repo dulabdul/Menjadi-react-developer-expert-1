@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../states';
 import { asyncPopulateUsersAndThreads } from '../states/shared/action';
@@ -10,14 +11,18 @@ import ThreadItem from '../components/ThreadItem';
 import ThreadInput from '../components/ThreadInput';
 import CategoryList from '../components/CategoryList';
 import ThreadSkeleton from '../components/ThreadSkeleton';
+import LoginModal from '../components/LoginModal';
 
 export default function HomePage() {
   const { threads, users, authUser } = useSelector(
     (state: RootState) => state as any,
   );
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
   const [filter, setFilter] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     dispatch(asyncPopulateUsersAndThreads()).then(() => {
@@ -30,7 +35,10 @@ export default function HomePage() {
   };
 
   const onUpVote = (id: string) => {
-    if (!authUser) return alert('Please login first');
+    if (!authUser) {
+      setShowLoginModal(true);
+      return;
+    }
 
     const thread = threads.find((t: any) => t.id === id);
     const isUpVoted = thread.upVotesBy.includes(authUser.id);
@@ -45,7 +53,10 @@ export default function HomePage() {
   };
 
   const onDownVote = (id: string) => {
-    if (!authUser) return alert('Please login first');
+    if (!authUser) {
+      setShowLoginModal(true);
+      return;
+    }
 
     const thread = threads.find((t: any) => t.id === id);
     const isDownVoted = thread.downVotesBy.includes(authUser.id);
@@ -75,6 +86,12 @@ export default function HomePage() {
 
   return (
     <div className='container mx-auto px-4 max-w-4xl pb-10'>
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onLogin={() => navigate('/login')}
+      />
+
       {authUser && <ThreadInput addThread={onAddThread} />}
 
       {!isLoading && (
@@ -88,16 +105,16 @@ export default function HomePage() {
       <div className='flex flex-col gap-4'>
         {isLoading
           ? Array.from({ length: 4 }).map((_, index) => (
-              <ThreadSkeleton key={index} />
-            ))
+            <ThreadSkeleton key={index} />
+          ))
           : filteredThreads.map((thread: any) => (
-              <ThreadItem
-                key={thread.id}
-                {...thread}
-                onUpVote={onUpVote}
-                onDownVote={onDownVote}
-              />
-            ))}
+            <ThreadItem
+              key={thread.id}
+              {...thread}
+              onUpVote={onUpVote}
+              onDownVote={onDownVote}
+            />
+          ))}
       </div>
     </div>
   );

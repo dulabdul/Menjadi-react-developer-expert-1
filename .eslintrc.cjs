@@ -15,6 +15,7 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'operator-linebreak': 'off',
     'max-len': 'off',
     'require-jsdoc': 'off',
     'valid-jsdoc': 'off',

@@ -1,25 +1,28 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../utils/api';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../states';
+import { asyncRegisterUser } from '../states/users/action';
 import RegisterInput from '../components/RegisterInput';
 import SuccessModal from '../components/SuccesModal';
 
 export default function RegisterPage() {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-
-  const navigate = useNavigate();
 
   const onRegister = async ({ name, email, password }: any) => {
     setIsLoading(true);
     setErrorMessage('');
 
     try {
-      await api.register({ name, email, password });
+      await dispatch(asyncRegisterUser({ name, email, password })).unwrap();
       setShowSuccessModal(true);
     } catch (error: any) {
-      setErrorMessage(error.message);
+      setErrorMessage(error);
     } finally {
       setIsLoading(false);
     }
