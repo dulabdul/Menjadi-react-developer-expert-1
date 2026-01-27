@@ -1,0 +1,32 @@
+module.exports = {
+  root: true,
+  env: { browser: true, es2020: true },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+    'google',
+  ],
+  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['react-refresh'],
+  rules: {
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
+    'max-len': 'off',
+    'require-jsdoc': 'off',
+    'valid-jsdoc': 'off',
+    'new-cap': 'off',
+    'object-curly-spacing': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    indent: ['error', 2, { SwitchCase: 1 }],
+    'object-curly-spacing': ['error', 'always'],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
+    'react/prop-types': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+  },
+};
