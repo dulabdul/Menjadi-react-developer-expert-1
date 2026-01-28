@@ -8,7 +8,7 @@ describe('threadsReducer function', () => {
 
     const nextState = threadsReducer(initialState, action);
 
-    expect(nextState).toEqual('SALAH');
+    expect(nextState).toEqual(initialState);
   });
 
   it('should return the threads when given by receiveThreads action', () => {
