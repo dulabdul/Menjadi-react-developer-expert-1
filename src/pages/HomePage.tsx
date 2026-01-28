@@ -7,11 +7,11 @@ import {
   asyncAddThread,
   asyncToggleVoteThread,
 } from '../states/threads/action';
-import ThreadItem from '../components/ThreadItem';
-import ThreadInput from '../components/ThreadInput';
+import ThreadItem from '../components/threads/ThreadItem';
+import ThreadInput from '../components/threads/ThreadInput';
 import CategoryList from '../components/CategoryList';
-import ThreadSkeleton from '../components/ThreadSkeleton';
-import LoginModal from '../components/LoginModal';
+import ThreadSkeleton from '../components/threads/ThreadSkeleton';
+import LoginModal from '../components/modal/LoginModal';
 
 export default function HomePage() {
   const { threads, users, authUser } = useSelector(

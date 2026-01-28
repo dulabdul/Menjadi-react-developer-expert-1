@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FaThumbsUp, FaThumbsDown, FaRegComment } from 'react-icons/fa';
-import { postedAt } from '../utils';
+import parse from 'html-react-parser';
+import { postedAt } from '../../utils';
 
 interface ThreadItemProps {
   id: string;
@@ -46,21 +47,24 @@ export default function ThreadItem({
         className='text-xl font-bold text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
         {title}
       </Link>
-      <p
-        className='text-gray-600 dark:text-gray-300 mt-2 line-clamp-3 transition-colors'
-        dangerouslySetInnerHTML={{ __html: body }}
-      />
+      <div className='text-gray-600 dark:text-gray-300 mt-2 line-clamp-3 transition-colors'>
+        {parse(body)}
+      </div>
 
       <div className='flex items-center justify-between mt-4 text-sm text-gray-500 dark:text-gray-400 transition-colors'>
         <div className='flex items-center gap-4'>
           <button
             onClick={() => onUpVote(id)}
-            className={`flex items-center gap-1 hover:text-blue-600 transition-colors ${isUpVoted ? 'text-blue-600 dark:text-blue-400' : ''}`}>
+            className={`flex items-center gap-1 hover:text-blue-600 transition-colors ${
+              isUpVoted ? 'text-blue-600 dark:text-blue-400' : ''
+            }`}>
             <FaThumbsUp /> {upVotesBy.length}
           </button>
           <button
             onClick={() => onDownVote(id)}
-            className={`flex items-center gap-1 hover:text-red-600 transition-colors ${isDownVoted ? 'text-red-600 dark:text-red-400' : ''}`}>
+            className={`flex items-center gap-1 hover:text-red-600 transition-colors ${
+              isDownVoted ? 'text-red-600 dark:text-red-400' : ''
+            }`}>
             <FaThumbsDown /> {downVotesBy.length}
           </button>
           <span className='flex items-center gap-1'>

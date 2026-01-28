@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../states';
 import { asyncReceiveLeaderboards } from '../states/leaderboards/reducer';
-import LeaderboardItem from '../components/LeaderboardItem';
-import LeaderboardSkeleton from '../components/LeaderboardSkeleton';
+import LeaderboardItem from '../components/threads/LeaderboardItem';
+import LeaderboardSkeleton from '../components/threads/LeaderboardSkeleton';
 
 export default function LeaderboardPage() {
   const leaderboards = useSelector((state: RootState) => state.leaderboards);

@@ -1,5 +1,6 @@
 import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
-import { postedAt } from '../utils';
+import parse from 'html-react-parser';
+import { postedAt } from '../../utils';
 
 interface CommentItemProps {
   comment: any;
@@ -30,10 +31,9 @@ export default function CommentItem({
             <p className='font-bold text-sm text-gray-900 dark:text-gray-100 transition-colors'>
               {comment.owner.name}
             </p>
-            <p
-              className='text-gray-700 dark:text-gray-300 mt-1 mb-2 transition-colors'
-              dangerouslySetInnerHTML={{ __html: comment.content }}
-            />
+            <div className='text-gray-700 dark:text-gray-300 mt-1 mb-2 transition-colors'>
+              {parse(comment.content)}
+            </div>
 
             <div className='flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400'>
               <div className='flex items-center gap-3'>

@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../states';
 import { asyncRegisterUser } from '../states/users/action';
-import RegisterInput from '../components/RegisterInput';
-import SuccessModal from '../components/SuccesModal';
+import RegisterInput from '../components/register/RegisterInput';
+import SuccessModal from '../components/modal/SuccesModal';
 
 export default function RegisterPage() {
   const dispatch = useDispatch<AppDispatch>();

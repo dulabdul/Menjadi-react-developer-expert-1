@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaThumbsUp, FaThumbsDown, FaRegComment } from 'react-icons/fa';
+import parse from 'html-react-parser';
 import type { RootState, AppDispatch } from '../states';
 import {
   asyncReceiveThreadDetail,
@@ -9,10 +10,10 @@ import {
   asyncToggleVoteComment,
 } from '../states/threadDetail/action';
 import { asyncToggleVoteThread } from '../states/threads/action';
-import CommentItem from '../components/CommentItem';
-import CommentInput from '../components/CommentInput';
-import DetailSkeleton from '../components/DetailSkeleton';
-import LoginModal from '../components/LoginModal';
+import CommentItem from '../components/threads/CommentItem';
+import CommentInput from '../components/threads/CommentInput';
+import DetailSkeleton from '../components/threads/DetailSkeleton';
+import LoginModal from '../components/modal/LoginModal';
 import { postedAt } from '../utils';
 
 export default function DetailPage() {
@@ -163,10 +164,9 @@ export default function DetailPage() {
             </p>
           </div>
         </div>
-        <div
-          className='prose max-w-none mb-6 text-gray-800 dark:text-gray-200 transition-colors'
-          dangerouslySetInnerHTML={{ __html: threadDetail.body }}
-        />
+        <div className='prose max-w-none mb-6 text-gray-800 dark:text-gray-200 transition-colors'>
+          {parse(threadDetail.body)}
+        </div>
 
         <div className='flex items-center gap-4 text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-4 transition-colors'>
           <button

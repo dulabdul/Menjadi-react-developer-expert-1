@@ -4,7 +4,7 @@ import { FaUser, FaSignOutAlt, FaTrophy, FaComments } from 'react-icons/fa';
 import type { RootState, AppDispatch } from '../states';
 import { asyncUnsetAuthUser } from '../states/auth/action';
 import ThemeToggle from './ThemeToggle';
-import UserLoginned from './UserLoginned';
+import UserLoginned from './login/UserLoginned';
 
 export default function Navigation() {
   const authUser = useSelector((state: RootState) => state.authUser as any);
