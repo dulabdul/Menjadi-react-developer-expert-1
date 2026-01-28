@@ -8,8 +8,8 @@ import {
   asyncReceiveThreadDetail,
   asyncAddComment,
   asyncToggleVoteComment,
+  asyncToggleVoteThreadDetail,
 } from '../states/threadDetail/action';
-import { asyncToggleVoteThread } from '../states/threads/action';
 import CommentItem from '../components/threads/CommentItem';
 import CommentInput from '../components/threads/CommentInput';
 import DetailSkeleton from '../components/threads/DetailSkeleton';
@@ -49,7 +49,7 @@ export default function DetailPage() {
     const isUpVoted = threadDetail.upVotesBy.includes(authUser.id);
 
     dispatch(
-      asyncToggleVoteThread({
+      asyncToggleVoteThreadDetail({
         threadId: id,
         voteType: isUpVoted ? 0 : 1,
         userId: authUser.id,
@@ -67,7 +67,7 @@ export default function DetailPage() {
     const isDownVoted = threadDetail.downVotesBy.includes(authUser.id);
 
     dispatch(
-      asyncToggleVoteThread({
+      asyncToggleVoteThreadDetail({
         threadId: id,
         voteType: isDownVoted ? 0 : -1,
         userId: authUser.id,

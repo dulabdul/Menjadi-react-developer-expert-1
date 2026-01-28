@@ -13,6 +13,20 @@ const threadDetailSlice = createSlice({
         comments: [action.payload, ...state.comments],
       };
     },
+    toggleVoteThreadDetail(state, action) {
+      const { userId, voteType } = action.payload;
+      return {
+        ...state,
+        upVotesBy:
+          voteType === 1
+            ? [...new Set([...state.upVotesBy, userId])]
+            : state.upVotesBy.filter((id: string) => id !== userId),
+        downVotesBy:
+          voteType === -1
+            ? [...new Set([...state.downVotesBy, userId])]
+            : state.downVotesBy.filter((id: string) => id !== userId),
+      };
+    },
     toggleVoteComment(state, action) {
       const { commentId, voteType, userId } = action.payload;
       return {
@@ -38,6 +52,10 @@ const threadDetailSlice = createSlice({
   },
 });
 
-export const { receiveThreadDetail, addComment, toggleVoteComment } =
-  threadDetailSlice.actions;
+export const {
+  receiveThreadDetail,
+  addComment,
+  toggleVoteComment,
+  toggleVoteThreadDetail,
+} = threadDetailSlice.actions;
 export default threadDetailSlice.reducer;

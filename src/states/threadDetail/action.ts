@@ -1,6 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../utils/api';
-import { receiveThreadDetail, addComment, toggleVoteComment } from './reducer';
+import {
+  receiveThreadDetail,
+  addComment,
+  toggleVoteComment,
+  toggleVoteThreadDetail,
+} from './reducer';
 
 export const asyncReceiveThreadDetail = createAsyncThunk(
   'threadDetail/receive',
@@ -23,6 +28,18 @@ export const asyncAddComment = createAsyncThunk(
       dispatch(addComment(comment));
     } catch (error: any) {
       alert(error.message);
+    }
+  },
+);
+
+export const asyncToggleVoteThreadDetail = createAsyncThunk(
+  'threadDetail/toggleVoteThreadDetail',
+  async ({ threadId, voteType, userId }: any, { dispatch }) => {
+    dispatch(toggleVoteThreadDetail({ userId, voteType }));
+    try {
+      await api.toggleVoteThread(threadId, voteType);
+    } catch {
+      dispatch(toggleVoteThreadDetail({ userId, voteType: 0 }));
     }
   },
 );
