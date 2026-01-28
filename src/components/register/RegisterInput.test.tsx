@@ -1,3 +1,11 @@
+/**
+ * test scenario for RegisterInput
+ *
+ * - RegisterInput component
+ * - should handle name typing correctly
+ * - should call register function when register button is clicked
+ */
+
 import React from 'react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, cleanup } from '@testing-library/react';

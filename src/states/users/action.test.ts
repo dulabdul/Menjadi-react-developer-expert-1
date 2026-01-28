@@ -1,3 +1,11 @@
+/**
+ * test scenario for asyncRegisterUser
+ *
+ * - asyncRegisterUser function
+ * - should dispatch action correctly when data fetching success
+ * - should dispatch action and call rejectWithValue correctly when data fetching failed
+ */
+
 import { describe, afterEach, it, expect, vi } from 'vitest';
 import { asyncRegisterUser } from './action';
 import api from '../../utils/api';
